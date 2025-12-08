@@ -1,7 +1,8 @@
-package Projet;
+package Trio;
 
 import java.util.ArrayList;
 import java.util.List;
+import Trio.CompetencePackage.*;
 
 public class Student {
     private int id;

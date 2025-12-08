@@ -1,4 +1,7 @@
-package Projet;
+package Trio;
+
+import Trio.*;
+import Trio.CompetencePackage.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -6,7 +9,7 @@ public class Main {
         Student student = new Student(1, "JohnDoe", "Informatique", team);
 
         Subject subject = new Subject(101, 5, true);
-        Competence comp = new Competence("Java", 10, 20);
+        Competence comp = new Competence("Java", "Object oriented modeling and programing with Java", 10, 20);
         Partie partie = new Partie(Partie.Mode.SOLO, Partie.Difficulty.MEDIUM);
 
         // liens

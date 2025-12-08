@@ -1,4 +1,4 @@
-package Projet;
+package Trio;
 
 public class Team {
     public enum Color { RED, BLUE, GREEN, YELLOW }

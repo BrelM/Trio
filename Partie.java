@@ -1,4 +1,4 @@
-package Projet;
+package Trio;
 
 public class Partie {
     public enum Mode { SOLO, MULTI }
