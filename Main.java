@@ -1,6 +1,5 @@
 package Trio;
 
-import Trio.*;
 import Trio.CompetencePackage.*;
 
 public class Main {
