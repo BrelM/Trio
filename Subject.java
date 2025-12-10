@@ -1,25 +1,24 @@
 package Trio;
 
+import Trio.CompetencePackage.Competence;
 import java.util.ArrayList;
 import java.util.List;
-import Trio.CompetencePackage.*;
 
 public class Subject {
-    private int id;
-    private int number;
+    private String id;
+    private int number; // C'est le coefficient qui nous intéresse
     private boolean state;
     private List<Competence> competences = new ArrayList<>();
 
-    public Subject() {}
-
-    public Subject(int id, int number, boolean state) {
+    public Subject(String id, int number, boolean state) {
         this.id = id;
         this.number = number;
         this.state = state;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // Getters et Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public int getNumber() { return number; }
     public void setNumber(int number) { this.number = number; }
@@ -29,6 +28,7 @@ public class Subject {
 
     public void addCompetence(Competence c) { competences.add(c); }
     public List<Competence> getCompetences() { return competences; }
+
 
     @Override
     public String toString() {
