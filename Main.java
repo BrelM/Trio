@@ -58,7 +58,7 @@ public class Main {
         System.out.println("### DÉBUT DE LA PARTIE ###");
         System.out.println("####################################\n");
 
-        Partie partie = new Partie("Multi", "Picante");
+        Game partie = new Game("Multi", "Picante");
         partie.shuffleAndDeal(players);
 
         // --- ÉTAPE 4: VÉRIFIER LA DISTRIBUTION ---
