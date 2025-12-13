@@ -173,7 +173,9 @@ public void shuffleAndDeal(List<Student> players) {
             this.centerPile.add(this.allSubjects.get(cardIndex));
             cardIndex++;
         }
-        
+        // Mélanger la pioche centrale pour s'assurer qu'elle est aléatoire
+        Collections.shuffle(this.centerPile);
+
         System.out.println("Distribution terminée.");
     }
     public List<Subject> getCenterPile() {

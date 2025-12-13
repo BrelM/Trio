@@ -6,13 +6,13 @@ import java.util.List;
 
 public class Subject {
     private String id;
-    private int number; // C'est le coefficient qui nous intéresse
+    private int credit; // C'est le coefficient qui nous intéresse
     private boolean state;
-    private List<Competence> competences = new ArrayList<>();
+    private Competence competence;
 
-    public Subject(String id, int number, boolean state) {
+    public Subject(String id, int credit, boolean state) {
         this.id = id;
-        this.number = number;
+        this.credit = credit;
         this.state = state;
     }
 
@@ -20,23 +20,23 @@ public class Subject {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public int getNumber() { return number; }
-    public void setNumber(int number) { this.number = number; }
+    public int getCredit() { return credit; }
+    public void setCredit(int credit) { this.credit = credit; }
 
     public boolean isState() { return state; }
     public void setState(boolean state) { this.state = state; }
 
-    public void addCompetence(Competence c) { competences.add(c); }
-    public List<Competence> getCompetences() { return competences; }
+    public void addCompetence(Competence c) { competence = c; }
+    public Competence getCompetences() { return competence; }
 
 
     @Override
     public String toString() {
         return "Subject{" +
                "id=" + id +
-               ", number=" + number +
+               ", number=" + credit +
                ", state=" + state +
-               ", competences=" + competences +
+               ", competence=" + competence +
                '}';
     }
 }
