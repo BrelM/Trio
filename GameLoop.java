@@ -6,7 +6,7 @@ import java.util.*;
 public class GameLoop {
     private Game game;
     private List<Student> players;
-    private String gameMode; // "SIMPLE" ou "TEAM"
+    private String gameMode; // "SOLO" ou "TEAM"
     private int currentPlayerIndex;
     private List<String> turnAnnouncements; // Annonces de trios trouvés au tour précédent
     private Map<Team, Integer> teamScores; // Scores des équipes (nombre de trios trouvés)
@@ -127,6 +127,18 @@ public class GameLoop {
                 case 6:
                     turnEnded = true;
                     break;
+                case 0:
+                    if (turnBuffer.isEmpty()) {
+                        System.out.println("Vous n'avez encore rien pioché ce tour.");
+                    } else {
+                        System.out.println("\n🧾 Cartes piochées ce tour:");
+                        for (int i = 0; i < turnBuffer.size(); i++) {
+                            TurnCard t = turnBuffer.get(i);
+                            String originDesc = (t.origin == TurnCard.Origin.CENTER) ? ("Pioche centrale (index " + t.centerIndex + ")") : ("Main de " + (t.sourcePlayer != null ? t.sourcePlayer.getPseudo() : "inconnu"));
+                            System.out.println("  " + (i + 1) + ". " + t.card.getId() + " (Coefficient " + t.card.getCredit() + ") - " + originDesc);
+                        }
+                    }
+                    break;
                 default:
                     System.out.println("❌ Choix invalide. Veuillez réessayer.");
             }
@@ -182,6 +194,9 @@ public class GameLoop {
         System.out.println("4 - 👥 Voir les trios d'autres joueurs");
         System.out.println("5 - 🔁 Tirer d'une main (votre main ou celle d'un autre joueur) - choisir carte la plus faible ou la plus forte");
         System.out.println("6 - ⏹️  Terminer mon tour");
+        if (!turnBuffer.isEmpty()) {
+            System.out.println("0 - 🧾 Voir les cartes piochées ce tour (" + turnBuffer.size() + ")");
+        }
     }
 
     /**
@@ -328,11 +343,6 @@ public class GameLoop {
         target.getSubjects().remove(selected);
         System.out.println("\n🔎 Carte sélectionnée: " + selected.getId() + " (Coefficient " + selected.getCredit() + ") de " + target.getPseudo());
 
-        if (!target.equals(player)) {
-            // Annonce aux autres joueurs qu'une carte a été prise
-            turnAnnouncements.add(player.getPseudo() + " a pris une carte de " + target.getPseudo() + ".");
-        }
-
         // Ajouter au buffer (les cartes prises ne vont pas directement dans la main)
         TurnCard tc = new TurnCard(selected, TurnCard.Origin.PLAYER);
         tc.sourcePlayer = target;
@@ -380,6 +390,12 @@ public class GameLoop {
             }
         }
     }
+
+
+    /**
+     * Verifie et valide les trios d'un joueur
+     * @param player : Player
+     */
     private void checkAndValidateTrios(Student player) {
         List<Competence> foundTrios = new ArrayList<>();
 
@@ -443,7 +459,7 @@ public class GameLoop {
         // Ajouter les cartes à validatedSubjects
             for (Subject subject : trio.getLinkedSubjects()) {
                 player.addValidatedSubject(subject);
-                // Retirer la carte de la main si elle s'y trouve, sinon de la buffer du tour
+                // Retirer la carte de la main si elle s'y trouve, sinon du buffer du tour
                 if (player.getSubjects().contains(subject)) {
                     player.getSubjects().remove(subject);
                 } else {
@@ -485,18 +501,25 @@ public class GameLoop {
 
     /**
      * Vérifie si le joueur a déjà validé ce trio
+     * Une compétence est validée si au moins 1 de ses 3 sujets est dans validatedSubjects
+     * (car les 3 sont toujours validés ensemble ou pas du tout)
      */
     private boolean hasAlreadyValidatedTrio(Student player, Competence competence) {
         List<Subject> competenceSubjects = competence.getLinkedSubjects();
-        int validatedCount = 0;
+        
+        // Vérifier que la compétence est complète (3 sujets)
+        if (competenceSubjects == null || competenceSubjects.size() != 3) {
+            return false; // Compétence malformée, ne pas la valider
+        }
 
+        // Si un seul des 3 sujets est dans validatedSubjects, le trio entier est validé
         for (Subject subject : competenceSubjects) {
             if (player.getValidatedSubjects().contains(subject)) {
-                validatedCount++;
+                return true; // Trio déjà validé
             }
         }
 
-        return validatedCount == 3;
+        return false; // Trio pas encore validé
     }
 
     /**
@@ -579,31 +602,87 @@ public class GameLoop {
      * Vérifie la condition de victoire
      */
     private boolean isWinningConditionMet(Student player) {
-        if (gameMode.equals("SIMPLE")) {
-            // En mode simple, le joueur doit avoir 3 trios (9 UEs)
-            return player.getValidatedSubjects().size() >= 9;
-        } else if (gameMode.equals("TEAM")) {
-            // En mode équipe, l'équipe doit avoir le trio avec coefficient 7
-            Team team = player.getTeam();
-            for (Student teamMember : players) {
-                if (teamMember.getTeam().equals(team)) {
-                    for (Subject subject : teamMember.getValidatedSubjects()) {
-                        if (subject.getCredit() == 7) {
-                            return true;
+        String difficulty = game.getDifficulty();
+
+        if (gameMode.equals("SOLO")) {
+            if ("SIMPLE".equals(difficulty)) {
+                // SIMPLE difficulty: either 3 trios (9 UEs) or the trio with credit 7
+                if (player.getValidatedSubjects().size() >= 9) return true;
+                for (Subject s : player.getValidatedSubjects()) if (s.getCredit() == 7) return true;
+                return false;
+            } else if (gameMode.equals("SOLO")) {
+                // PICANTE: player must have two linked competences
+                List<Competence> validated = getValidatedCompetencesForPlayer(player);
+                Set<Competence> validatedSet = new HashSet<>(validated);
+                for (Competence c : validated) {
+                    List<Competence> linked = c.getLinkedCompetences();
+                    if (linked != null) {
+                        for (Competence l : linked) {
+                            if (validatedSet.contains(l)) return true;
                         }
                     }
                 }
+                return false;
             }
-            return false;
+        } else if (gameMode.equals("TEAM")) {
+            Team team = player.getTeam();
+            if ("SIMPLE".equals(game.getDifficulty())) {
+                // SIMPLE: either team has 3 trios (aggregate of validatedSubjects >=9 per player?)
+                // We'll consider individual players reaching 9 UEs or any team member having the credit-7 trio
+                for (Student teamMember : players) {
+                    if (teamMember.getTeam().equals(team)) {
+                        if (teamMember.getValidatedSubjects().size() >= 9) return true;
+                        for (Subject s : teamMember.getValidatedSubjects()) if (s.getCredit() == 7) return true;
+                    }
+                }
+                return false;
+            } else if ("PICANTE".equals(game.getDifficulty())) {
+                // PICANTE: team must have two linked competences among union of validated competences
+                List<Competence> teamValidated = getValidatedCompetencesForTeam(team);
+                Set<Competence> validatedSet = new HashSet<>(teamValidated);
+                for (Competence c : teamValidated) {
+                    List<Competence> linked = c.getLinkedCompetences();
+                    if (linked != null) {
+                        for (Competence l : linked) {
+                            if (validatedSet.contains(l)) return true;
+                        }
+                    }
+                }
+                return false;
+            }
         }
         return false;
+        }
+
+    // Retourne la liste des compétences (trios) que le joueur a déjà validées
+    private List<Competence> getValidatedCompetencesForPlayer(Student player) {
+        List<Competence> result = new ArrayList<>();
+        Set<Subject> validated = new HashSet<>(player.getValidatedSubjects());
+        for (Competence c : game.getAllCompetences()) {
+            if (validated.containsAll(c.getLinkedSubjects())) result.add(c);
+        }
+        return result;
     }
+
+    // Retourne la liste des compétences validées par l'équipe (union des sujets validés)
+    private List<Competence> getValidatedCompetencesForTeam(Team team) {
+        Set<Subject> teamValidatedSubjects = new HashSet<>();
+        for (Student s : players) {
+            if (s.getTeam().equals(team)) teamValidatedSubjects.addAll(s.getValidatedSubjects());
+        }
+        List<Competence> result = new ArrayList<>();
+        for (Competence c : game.getAllCompetences()) {
+            if (teamValidatedSubjects.containsAll(c.getLinkedSubjects())) result.add(c);
+        }
+        return result;
+    }
+    
 
     /**
      * Vérifie si la partie est terminée
      */
     private boolean isGameOver() {
-        if (gameMode.equals("SIMPLE")) {
+        if (gameMode.equals("SOLO")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
                     return true;
@@ -629,7 +708,7 @@ public class GameLoop {
         System.out.println("🏆 FIN DE LA PARTIE 🏆");
         System.out.println("█".repeat(50));
 
-        if (gameMode.equals("SIMPLE")) {
+        if (gameMode.equals("SOLO")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
                     System.out.println("\n🎉 GAGNANT: " + player.getPseudo());
@@ -661,7 +740,7 @@ public class GameLoop {
         System.out.println("📊 STATISTIQUES FINALES:");
         System.out.println("-".repeat(50));
 
-        if (gameMode.equals("SIMPLE")) {
+        if (gameMode.equals("SOLO")) {
             for (Student player : players) {
                 System.out.println(player.getPseudo() + ": " + player.getValidatedSubjects().size() + " UEs (" + (player.getValidatedSubjects().size() / 3) + " trios)");
             }

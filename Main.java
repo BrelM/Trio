@@ -17,6 +17,9 @@ public class Main {
         
         // --- ÉTAPE 1: DEMANDER LE MODE DE JEU ---
         String gameMode = selectGameMode(scanner);
+
+        // --- ÉTAPE 1.5: DEMANDER LA DIFFICULTÉ ---
+        String difficulty = selectDifficulty(scanner);
         
         // --- ÉTAPE 2: DEMANDER LE NOMBRE DE JOUEURS ---
         int playerCount = 0;
@@ -36,7 +39,7 @@ public class Main {
             }
         } while (playerCount < 3 || playerCount > 6);
         
-        System.out.println("\nParfait ! La partie sera configurée pour " + playerCount + " joueurs en mode " + gameMode + ".\n");
+        System.out.println("\nParfait ! La partie sera configurée pour " + playerCount + " joueurs en mode " + gameMode + " (difficulté: " + difficulty + ").\n");
 
         // --- ÉTAPE 3: CRÉER LES JOUEURS ---
         List<Student> players = new ArrayList<>();
@@ -81,11 +84,12 @@ public class Main {
         System.out.println("### DÉBUT DE LA PARTIE ###");
         System.out.println("####################################\n");
 
-        Game game = new Game("Multi", "Picante");
+        Game game = new Game(gameMode, difficulty);
         
         // --- ÉTAPE 5: AFFICHER LES INFOS DE DISTRIBUTION ---
         System.out.println("\n--- INFORMATIONS DU JEU ---");
         System.out.println("Mode: " + gameMode);
+        System.out.println("Difficulté: " + difficulty);
         System.out.println("Nombre de joueurs: " + playerCount);
         System.out.println("Nombre de trios disponibles: " + game.getAllCompetences().size());
         System.out.println("Nombre de cartes totales: " + game.getAllSubjects().size());
@@ -103,7 +107,7 @@ public class Main {
      */
     private static String selectGameMode(Scanner scanner) {
         System.out.println("\n📋 SÉLECTIONNEZ LE MODE DE JEU:");
-        System.out.println("1 - SIMPLE (chaque joueur joue individuellement)");
+        System.out.println("1 - SOLO (chaque joueur joue individuellement)");
         System.out.println("2 - TEAM (les joueurs sont groupés par équipes)");
         
         int choice = 0;
@@ -121,6 +125,28 @@ public class Main {
             }
         } while (choice != 1 && choice != 2);
         
-        return choice == 1 ? "SIMPLE" : "TEAM";
+        return choice == 1 ? "SOLO" : "TEAM";
+    }
+
+    private static String selectDifficulty(Scanner scanner) {
+        System.out.println("\n📋 SÉLECTIONNEZ LA DIFFICULTÉ:");
+        System.out.println("1 - SIMPLE");
+        System.out.println("2 - PICANTE");
+
+        int choice = 0;
+        do {
+            System.out.print("\nChoisissez la difficulté (1 ou 2): ");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Erreur : veuillez entrer 1 ou 2.");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice != 1 && choice != 2) {
+                System.out.println("Choix invalide. Veuillez entrer 1 ou 2.");
+            }
+        } while (choice != 1 && choice != 2);
+
+        return choice == 1 ? "SIMPLE" : "PICANTE";
     }
 }

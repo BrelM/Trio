@@ -23,95 +23,108 @@ public class Game {
      * en se basant sur la liste fournie.
      */
     private void createGameDeck() {
-        // Créer toutes les UEs
-        Subject ap01 = new Subject("AP01", 1, true);
-        Subject ap4a = new Subject("AP4A", 7, true);
-        Subject ap03 = new Subject("AP03", 2, true);
+        // === SCIENTIFIC COMPETENCE (4 trios) ===
+        // Programmation / Mathématiques / Veille Technologique (Coeff 12)
+        Subject lo41 = new Subject("LO41", 12, true);
+        Subject ap4a = new Subject("AP4A", 12, true);
+        Subject si4a = new Subject("SI4A", 12, true);
         
-        Subject mt01 = new Subject("MT01", 3, true);
-        Subject mt02 = new Subject("MT02", 4, true);
-        Subject mt03 = new Subject("MT03", 5, true);
-
-        Subject mc01 = new Subject("MC01", 6, true);
-        Subject mc02 = new Subject("MC02", 8, true);
-        Subject mc03 = new Subject("MC03", 9, true);
-
-        Subject ea01 = new Subject("EA01", 11, true);
-        Subject ea02 = new Subject("EA02", 12, true);
-        Subject ea03 = new Subject("EA03", 13, true);
-
-        Subject ge01 = new Subject("GE01", 1, true);
-        Subject ge02 = new Subject("GE02", 7, true);
-        Subject ge03 = new Subject("GE03", 2, true);
-
-        Subject mk01 = new Subject("MK01", 3, true);
-        Subject mk02 = new Subject("MK02", 4, true);
-        Subject mk03 = new Subject("MK03", 5, true);
-
-        Subject fi01 = new Subject("FI01", 6, true);
-        Subject fi02 = new Subject("FI02", 8, true);
-        Subject fi03 = new Subject("FI03", 9, true);
-
-        Subject ht01 = new Subject("HT01", 10, true);
-        Subject ht02 = new Subject("HT02", 11, true);
-        Subject ht03 = new Subject("HT03", 12, true);
-
-        Subject co01 = new Subject("CO01", 1, true);
-        Subject co02 = new Subject("CO02", 7, true);
-        Subject co03 = new Subject("CO03", 2, true);
+        // Mathématiques / Mécanique / Programmation (Coeff 11)
+        Subject mt2a = new Subject("MT2A", 11, true);
+        Subject mt9a = new Subject("MT9A", 11, true);
+        Subject mt4b = new Subject("MT4B", 11, true);
         
-        Subject dr01 = new Subject("DR01", 3, true);
-        Subject dr02 = new Subject("DR02", 4, true);
-        Subject dr03 = new Subject("DR03", 5, true);
+        // Mécanique / Expression & Argumentation / Mathématiques (Coeff 10)
+        Subject mc2a = new Subject("MC2A", 10, true);
+        Subject mc3a = new Subject("MC3A", 10, true);
+        Subject mc4a = new Subject("MC4A", 10, true);
         
-        Subject ic01 = new Subject("IC01", 6, true);
-        Subject ic02 = new Subject("IC02", 8, true);
-        Subject ic03 = new Subject("IC03", 9, true);
+        // Expression & Argumentation / Gestion de Projet / Mécanique (Coeff 6)
+        Subject ea1a = new Subject("EA1A", 6, true);
+        Subject ea2b = new Subject("EA2B", 6, true);
+        Subject ea3c = new Subject("EA3C", 6, true);
+
+        // === MANAGEMENT COMPETENCE (4 trios) ===
+        // Gestion de Projet / Marketing / Expression & Argumentation (Coeff 9)
+        Subject ge1a = new Subject("GE1A", 9, true);
+        Subject ge2b = new Subject("GE2B", 9, true);
+        Subject ge3c = new Subject("GE3C", 9, true);
         
-        Subject vt01 = new Subject("VT01", 10, true);
-        Subject vt02 = new Subject("VT02", 11, true);
-        Subject vt03 = new Subject("VT03", 12, true);
+        // Marketing / Finance / Gestion de Projet (Coeff 8)
+        Subject mk1a = new Subject("MK1A", 8, true);
+        Subject mk2b = new Subject("MK2B", 8, true);
+        Subject mk3c = new Subject("MK3C", 8, true);
+        
+        // Finance / Histoire de Techniques / Marketing (Coeff 5)
+        Subject fi1a = new Subject("FI1A", 5, true);
+        Subject fi2b = new Subject("FI2B", 5, true);
+        Subject fi3c = new Subject("FI3C", 5, true);
+        
+        // Histoire des Techniques / Communication / Finance (Coeff 4)
+        Subject ht01 = new Subject("HT01", 4, true);
+        Subject ht02 = new Subject("HT02", 4, true);
+        Subject ht03 = new Subject("HT03", 4, true);
+
+        // === SOCIETAL COMPETENCE (4 trios) ===
+        // Communication / Droit & Société / Veille Technologique (Coeff 3)
+        Subject co1a = new Subject("CO1A", 3, true);
+        Subject co2b = new Subject("CO2B", 3, true);
+        Subject co3c = new Subject("CO3C", 3, true);
+        
+        // Droit & Société / Interculturel / Communication (Coeff 2)
+        Subject dr01 = new Subject("DR01", 2, true);
+        Subject dr02 = new Subject("DR02", 2, true);
+        Subject dr03 = new Subject("DR03", 2, true);
+        
+        // Interculturel / Veille Technologique / Droit & Société (Coeff 1)
+        Subject ic01 = new Subject("IC01", 1, true);
+        Subject ic02 = new Subject("IC02", 1, true);
+        Subject ic03 = new Subject("IC03", 1, true);
+        
+        // Veille Technologique / Programmation / Interculturel (Coeff 7)
+        Subject vt01 = new Subject("VT01", 7, true);
+        Subject vt02 = new Subject("VT02", 7, true);
+        Subject vt03 = new Subject("VT03", 7, true);
         
         // Ajouter toutes les UEs à la liste principale
-        this.allSubjects.addAll(List.of(ap01, ap4a, ap03, mt01, mt02, mt03, mc01, mc02, mc03, ea01, ea02, ea03, 
-                                        ge01, ge02, ge03, mk01, mk02, mk03, fi01, fi02, fi03, ht01, ht02, ht03, 
-                                        co01, co02, co03, dr01, dr02, dr03, ic01, ic02, ic03, vt01, vt02, vt03));
+        this.allSubjects.addAll(List.of(
+            // Scientific
+            lo41, ap4a, si4a, mt2a, mt9a, mt4b, mc2a, mc3a, mc4a, ea1a, ea2b, ea3c,
+            // Management
+            ge1a, ge2b, ge3c, mk1a, mk2b, mk3c, fi1a, fi2b, fi3c, ht01, ht02, ht03,
+            // Societal
+            co1a, co2b, co3c, dr01, dr02, dr03, ic01, ic02, ic03, vt01, vt02, vt03
+        ));
         
-
-
-        // Coefficient 1
-        createTrio("Trio-Coeff1-1", ap01, ge01, co01);  
-        // Coefficient 2
-        createTrio("Trio-Coeff2-1", ap03, ge03, co03);     
-        // Coefficient 7
-        createTrio("Trio-Coeff7-1", ap4a, ge02, co02);     
-
-        // Coefficient 3
-        createTrio("Trio-Coeff3", mt01, mk01, dr01);
-
-        // Coefficient 4
-        createTrio("Trio-Coeff4", mt02, mk02, dr02);
-
-        // Coefficient 5
-        createTrio("Trio-Coeff5", mt03, mk03, dr03);
-
-        // Coefficient 6
-        createTrio("Trio-Coeff6", mc01, fi01, ic01);
-
-        // Coefficient 8
-        createTrio("Trio-Coeff8", mc02, fi02, ic02);
-
-        // Coefficient 9
-        createTrio("Trio-Coeff9", mc03, fi03, ic03);
-
-        // Coefficient 10
-        createTrio("Trio-Coeff10", ea01, ht01, vt01);
-
-        // Coefficient 11
-        createTrio("Trio-Coeff11", ea02, ht02, vt02);
-
-        // Coefficient 12
-        createTrio("Trio-Coeff12", ea03, ht03, vt03);
+        // === CREATE TRIOS ===
+        // Scientific Competence Trios
+        createTrio("Trio-Coeff12-Scientific", lo41, ap4a, si4a);
+        createTrio("Trio-Coeff11-Scientific", mt2a, mt9a, mt4b);
+        createTrio("Trio-Coeff10-Scientific", mc2a, mc3a, mc4a);
+        createTrio("Trio-Coeff6-Scientific", ea1a, ea2b, ea3c);
+        
+        // Management Competence Trios
+        createTrio("Trio-Coeff9-Management", ge1a, ge2b, ge3c);
+        createTrio("Trio-Coeff8-Management", mk1a, mk2b, mk3c);
+        createTrio("Trio-Coeff5-Management", fi1a, fi2b, fi3c);
+        createTrio("Trio-Coeff4-Management", ht01, ht02, ht03);
+        
+        // Societal Competence Trios
+        createTrio("Trio-Coeff3-Societal", co1a, co2b, co3c);
+        createTrio("Trio-Coeff2-Societal", dr01, dr02, dr03);
+        createTrio("Trio-Coeff1-Societal", ic01, ic02, ic03);
+        createTrio("Trio-Coeff7-Societal", vt01, vt02, vt03);
+        
+        
+        // Lier chaque compétence à deux autres en topologie circulaire (voisins précédent/suivant)
+        // Ainsi si A est lié à (B,C) alors B et C auront A dans leurs liens également
+        int n = this.allCompetences.size();
+        for (int i = 0; i < n; i++) {
+            Competence c = this.allCompetences.get(i);
+            Competence prev = this.allCompetences.get((i - 1 + n) % n);
+            Competence next = this.allCompetences.get((i + 1) % n);
+            c.setLinkedCompetences(prev, next);
+        }
         
     }
 
@@ -189,4 +202,6 @@ public void shuffleAndDeal(List<Student> players) {
     public List<Competence> getAllCompetences() {
         return allCompetences;
     }
+    public String getMode() { return mode; }
+    public String getDifficulty() { return difficulty; }
 }

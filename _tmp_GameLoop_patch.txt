@@ -1,0 +1,19 @@
+(patch preview)
+--- displayTurnMenu(before)
++        System.out.println("6 - ⏹️  Terminer mon tour");
++        if (!turnBuffer.isEmpty()) {
++            System.out.println("0 - 🧾 Voir les cartes piochées ce tour (" + turnBuffer.size() + ")");
++        }
+--- switch(before)
++                case 0:
++                    if (turnBuffer.isEmpty()) {
++                        System.out.println("Vous n'avez encore rien pioché ce tour.");
++                    } else {
++                        System.out.println("\n🧾 Cartes piochées ce tour:");
++                        for (int i = 0; i < turnBuffer.size(); i++) {
++                            TurnCard t = turnBuffer.get(i);
++                            String originDesc = t.origin == TurnCard.Origin.CENTER ? "Pioche centrale (index " + t.centerIndex + ")" : "Main de " + t.sourcePlayer.getPseudo();
++                            System.out.println("  " + (i+1) + ". " + t.card.getId() + " (Coeff " + t.card.getCredit() + ") - " + originDesc);
++                        }
++                    }
++                    break;
