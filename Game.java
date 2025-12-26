@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Game {
-    private String mode;
-    private String difficulty;
+    private String mode; // "SOLO" ou "TEAM"
+    private String difficulty; // "SIMPLE" ou "PICANTE"
     private List<Subject> centerPile = new ArrayList<>(); // Pioche centrale
     private List<Subject> allSubjects = new ArrayList<>(); // Toutes les cartes UE du jeu
     private List<Competence> allCompetences = new ArrayList<>(); // Toutes les combinaisons de Trio possibles

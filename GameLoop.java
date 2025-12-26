@@ -1,12 +1,14 @@
 package Trio;
 
+import Trio.Game;
+import Trio.Student;
+import Trio.Team;
 import Trio.CompetencePackage.Competence;
 import java.util.*;
 
 public class GameLoop {
     private Game game;
     private List<Student> players;
-    private String gameMode; // "SOLO" ou "TEAM"
     private int currentPlayerIndex;
     private List<String> turnAnnouncements; // Annonces de trios trouvés au tour précédent
     private Map<Team, Integer> teamScores; // Scores des équipes (nombre de trios trouvés)
@@ -20,16 +22,15 @@ public class GameLoop {
         Student sourcePlayer = null; // si origin == PLAYER
         int handIndex = -1; // original index in hand
 
-        TurnCard(Subject card, Origin origin) { this.card = card; this.origin = origin; }
+            TurnCard(Subject card, Origin origin) { this.card = card; this.origin = origin; }
     }
     private List<TurnCard> turnBuffer = new ArrayList<>();
     private Integer bufferCredit = null; // crédit de la séquence en cours
     private boolean turnMustEnd = false; // drapeau pour forcer la fin du tour (ex: trio trouvé)
 
-    public GameLoop(Game game, List<Student> players, String gameMode, Scanner scanner) {
+    public GameLoop(Game game, List<Student> players, Scanner scanner) {
         this.game = game;
         this.players = players;
-        this.gameMode = gameMode;
         this.currentPlayerIndex = 0;
         this.turnAnnouncements = new ArrayList<>();
         this.teamScores = new HashMap<>();
@@ -46,7 +47,7 @@ public class GameLoop {
      */
     public void play() {
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("DÉBUT DE LA PARTIE - MODE " + gameMode);
+        System.out.println("DÉBUT DE LA PARTIE - MODE " + game.getMode());
         System.out.println("=".repeat(50) + "\n");
 
         // Mélanger et distribuer les cartes
@@ -381,7 +382,7 @@ public class GameLoop {
 
         for (Competence competence : game.getAllCompetences()) {
             if (!hasAlreadyValidatedTrio(player, competence)) {
-                if (new HashSet<>(available).containsAll(competence.getLinkedSubjects())) {
+                if (new HashSet<>(available).containsAll(competence.getSubjects())) {
                     // Valider le trio en retirant les cartes pertinentes (de la main ou du buffer)
                     validateTrio(player, competence);
                     // turnMustEnd est défini dans validateTrio
@@ -401,7 +402,7 @@ public class GameLoop {
 
         for (Competence competence : game.getAllCompetences()) {
             // Vérifier si le joueur possède les 3 cartes du trio
-            List<Subject> competenceSubjects = competence.getLinkedSubjects();
+            List<Subject> competenceSubjects = competence.getSubjects();
             int matchCount = 0;
 
             for (Subject subject : competenceSubjects) {
@@ -457,7 +458,7 @@ public class GameLoop {
         System.out.println("\n🎉 TRIO TROUVÉ : " + trio.getName() + " !");
 
         // Ajouter les cartes à validatedSubjects
-            for (Subject subject : trio.getLinkedSubjects()) {
+            for (Subject subject : trio.getSubjects()) {
                 player.addValidatedSubject(subject);
                 // Retirer la carte de la main si elle s'y trouve, sinon du buffer du tour
                 if (player.getSubjects().contains(subject)) {
@@ -482,7 +483,7 @@ public class GameLoop {
         bufferCredit = null; // réinitialiser la séquence
 
         // Mettre à jour le score de l'équipe (en mode équipe)
-        if (gameMode.equals("TEAM")) {
+        if (game.getMode().equals("TEAM")) {
             teamScores.put(player.getTeam(), teamScores.get(player.getTeam()) + 1);
         }
 
@@ -505,7 +506,7 @@ public class GameLoop {
      * (car les 3 sont toujours validés ensemble ou pas du tout)
      */
     private boolean hasAlreadyValidatedTrio(Student player, Competence competence) {
-        List<Subject> competenceSubjects = competence.getLinkedSubjects();
+        List<Subject> competenceSubjects = competence.getSubjects();
         
         // Vérifier que la compétence est complète (3 sujets)
         if (competenceSubjects == null || competenceSubjects.size() != 3) {
@@ -604,13 +605,13 @@ public class GameLoop {
     private boolean isWinningConditionMet(Student player) {
         String difficulty = game.getDifficulty();
 
-        if (gameMode.equals("SOLO")) {
+        if (game.getMode().equals("SOLO")) {
             if ("SIMPLE".equals(difficulty)) {
                 // SIMPLE difficulty: either 3 trios (9 UEs) or the trio with credit 7
                 if (player.getValidatedSubjects().size() >= 9) return true;
                 for (Subject s : player.getValidatedSubjects()) if (s.getCredit() == 7) return true;
                 return false;
-            } else if (gameMode.equals("SOLO")) {
+            } else if (game.getMode().equals("SOLO")) {
                 // PICANTE: player must have two linked competences
                 List<Competence> validated = getValidatedCompetencesForPlayer(player);
                 Set<Competence> validatedSet = new HashSet<>(validated);
@@ -624,7 +625,7 @@ public class GameLoop {
                 }
                 return false;
             }
-        } else if (gameMode.equals("TEAM")) {
+        } else if (game.getMode().equals("TEAM")) {
             Team team = player.getTeam();
             if ("SIMPLE".equals(game.getDifficulty())) {
                 // SIMPLE: either team has 3 trios (aggregate of validatedSubjects >=9 per player?)
@@ -659,7 +660,7 @@ public class GameLoop {
         List<Competence> result = new ArrayList<>();
         Set<Subject> validated = new HashSet<>(player.getValidatedSubjects());
         for (Competence c : game.getAllCompetences()) {
-            if (validated.containsAll(c.getLinkedSubjects())) result.add(c);
+            if (validated.containsAll(c.getSubjects())) result.add(c);
         }
         return result;
     }
@@ -672,7 +673,7 @@ public class GameLoop {
         }
         List<Competence> result = new ArrayList<>();
         for (Competence c : game.getAllCompetences()) {
-            if (teamValidatedSubjects.containsAll(c.getLinkedSubjects())) result.add(c);
+            if (teamValidatedSubjects.containsAll(c.getSubjects())) result.add(c);
         }
         return result;
     }
@@ -682,13 +683,13 @@ public class GameLoop {
      * Vérifie si la partie est terminée
      */
     private boolean isGameOver() {
-        if (gameMode.equals("SOLO")) {
+        if (game.getMode().equals("SOLO")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
                     return true;
                 }
             }
-        } else if (gameMode.equals("TEAM")) {
+        } else if (game.getMode().equals("TEAM")) {
             for (Team team : teamScores.keySet()) {
                 for (Student player : players) {
                     if (player.getTeam().equals(team) && isWinningConditionMet(player)) {
@@ -708,7 +709,7 @@ public class GameLoop {
         System.out.println("🏆 FIN DE LA PARTIE 🏆");
         System.out.println("█".repeat(50));
 
-        if (gameMode.equals("SOLO")) {
+        if (game.getMode().equals("SOLO")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
                     System.out.println("\n🎉 GAGNANT: " + player.getPseudo());
@@ -717,7 +718,7 @@ public class GameLoop {
                     break;
                 }
             }
-        } else if (gameMode.equals("TEAM")) {
+        } else if (game.getMode().equals("TEAM")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
                     System.out.println("\n🎉 ÉQUIPE GAGNANTE: " + player.getTeam().getPseudo());
@@ -740,11 +741,11 @@ public class GameLoop {
         System.out.println("📊 STATISTIQUES FINALES:");
         System.out.println("-".repeat(50));
 
-        if (gameMode.equals("SOLO")) {
+        if (game.getMode().equals("SOLO")) {
             for (Student player : players) {
                 System.out.println(player.getPseudo() + ": " + player.getValidatedSubjects().size() + " UEs (" + (player.getValidatedSubjects().size() / 3) + " trios)");
             }
-        } else if (gameMode.equals("TEAM")) {
+        } else if (game.getMode().equals("TEAM")) {
             for (Team team : teamScores.keySet()) {
                 System.out.println(team.getPseudo() + ": " + teamScores.get(team) + " trios");
             }

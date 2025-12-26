@@ -95,9 +95,16 @@ public class Main {
         System.out.println("Nombre de cartes totales: " + game.getAllSubjects().size());
         
         // --- ÉTAPE 6: LANCER LA BOUCLE DE JEU ---
-        GameLoop gameLoop = new GameLoop(game, players, gameMode, scanner);
-        gameLoop.play();
+        int playAgain = 1;
+        while(playAgain == 1){
         
+            GameLoop gameLoop = new GameLoop(game, players, scanner);
+            gameLoop.play();
+
+            // --- ÉTAPE 7: PROPOSER DE REJOUER ---
+            playAgain = restartGameMenu(scanner);
+        
+        }    
         // Fermer le scanner après la partie
         scanner.close();
     }
@@ -149,4 +156,33 @@ public class Main {
 
         return choice == 1 ? "SIMPLE" : "PICANTE";
     }
+
+    private static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors du nettoyage de la console.");
+        }
+    }
+
+    private static int restartGameMenu(Scanner scanner) {
+        System.out.println("\nVoulez-vous rejouer ? (O/N)");
+
+        scanner = new Scanner(System.in);
+        String input = scanner.nextLine().trim().toUpperCase();
+        if (input.equals("O")) {
+            clearConsole();
+            return 1;    
+        } else {
+            System.out.println("Merci d'avoir joué à TRIO ! À bientôt !");
+            return 0;
+        }
+        
+    }
+
 }

@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Student {
-    private int id;
+    // private int id;
     private String pseudo;
     private String speciality;
     private Team team;
     private List<Subject> subjects = new ArrayList<>(); //
     private List<Competence> competences= new ArrayList<>(); //competence valid (?)
     private List<Subject> validatedSubjects = new ArrayList<>();
-    private List<Game> parties = new ArrayList<>();
+    // private List<Game> parties = new ArrayList<>();
 
     public Student() {}
 
@@ -39,11 +39,11 @@ public class Student {
 
     public void addSubject(Subject s) { subjects.add(s); }
     public void addCompetence(Competence c) { competences.add(c); }
-    public void addPartie(Game p) { parties.add(p); }
+    // public void addPartie(Game p) { parties.add(p); }
 
     public List<Subject> getSubjects() { return subjects; }
     public List<Competence> getCompetences() { return competences; }
-    public List<Game> getParties() { return parties; }
+    // public List<Game> getParties() { return parties; }
 
     public void addSubjectToHand(Subject subject) {
         // Insert the subject so that the hand remains ordered by credit (ascending)
