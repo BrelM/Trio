@@ -56,6 +56,8 @@ public class GameSetupUI extends JFrame {
 
         add(mainPanel);
         cardLayout.show(mainPanel, "MODE_SELECTION");
+
+
     }
 
     private void createModeSelectionPanel() {
@@ -220,6 +222,7 @@ public class GameSetupUI extends JFrame {
         playerInfoPanel.add(launchButton, BorderLayout.SOUTH);
     }
 
+
     private void addPlayerFields(JPanel panel, GridBagConstraints gbc, int playerIndex, String[] specialties) {
         gbc.gridy++;
         gbc.gridwidth = 1;
@@ -266,21 +269,29 @@ public class GameSetupUI extends JFrame {
             } else {
                 playerTeam = new Team("Solo " + (i + 1), "Couleur " + (i + 1));
             }
-            
+
             players.add(new Student(i + 1, pseudo, specialty, playerTeam));
         }
 
         String finalGameMode = gameMode.equals("ÉQUIPE") ? "TEAM" : "SOLO";
         Game game = new Game(finalGameMode, this.difficulty.toUpperCase());
-        game.shuffleAndDeal(players);
+
+        try {
+            game.shuffleAndDeal(players);
+        } catch (Exception e) {
+            showError("Erreur lors de la distribution des cartes : " + e.getMessage());
+            return;
+        }
 
         SwingUtilities.invokeLater(() -> {
             MainGameUI mainGameUI = new MainGameUI(game, players);
             mainGameUI.setVisible(true);
         });
-        
+
         this.dispose();
     }
+
+
     
     private GridBagConstraints createGbc() {
         GridBagConstraints gbc = new GridBagConstraints();

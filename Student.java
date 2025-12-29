@@ -19,14 +19,10 @@ public class Student {
     public Student() {}
 
     public Student(int id, String pseudo, String speciality, Team team) {
-        this.id = id;
         this.pseudo = pseudo;
         this.speciality = speciality;
         this.team = team;
     }
-
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
 
     public String getPseudo() { return pseudo; }
     public void setPseudo(String pseudo) { this.pseudo = pseudo; }
@@ -81,7 +77,6 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-               "id=" + id +
                ", pseudo='" + pseudo + '\'' +
                ", speciality='" + speciality + '\'' +
                ", team=" + team +
