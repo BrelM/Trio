@@ -7,7 +7,6 @@ import Trio.Game;
 import Trio.Student;
 import Trio.Subject;
 import Trio.Team;
-import Trio.model.GameModel;
 
 public class GameController {
 
@@ -32,6 +31,7 @@ public class GameController {
     private List<TurnCard> turnBuffer = new ArrayList<>();
     private Integer bufferCredit = null;
     private boolean turnMustEnd = false;
+    private Team winner = null;
 
     public GameController(Game game, List<Student> players) {
         this.game = game;
@@ -51,6 +51,11 @@ public class GameController {
         return players.get(currentPlayerIndex);
     }
 
+    /** Returns all players */
+    public List<Student> getAllPlayers() {
+        return players;
+    }
+
     /** Returns current player teammates **/
     public List<Student> getCurrentPlayerTeamMates() {
         List<Student> team = new ArrayList<>(List.of());
@@ -63,7 +68,7 @@ public class GameController {
     /** Returns turn announcements since last action */
     public List<String> getTurnAnnouncements() {
         List<String> announcements = new ArrayList<>(turnAnnouncements);
-        turnAnnouncements.clear();
+        //turnAnnouncements.clear();
         return announcements;
     }
 
@@ -80,11 +85,13 @@ public class GameController {
         return drawn;
     }
 
-    /** Draw the min/max card from a player’s hand */
-    public Subject drawFromPlayerHand(Student target, boolean pickMax) {
-        if (target.getSubjects().isEmpty()) return null;
+    /**
+     * Draw the min/max card from a player’s hand
+     */
+    public void drawFromPlayerHand(Student target, boolean pickMax) {
+        if (target.getSubjects().isEmpty()) return;
 
-        Subject selected = target.getSubjects().get(0);
+        Subject selected = target.getSubjects().getFirst();
         for (Subject s : target.getSubjects()) {
             if ((pickMax && s.getCredit() > selected.getCredit())
                 || (!pickMax && s.getCredit() < selected.getCredit())) {
@@ -100,7 +107,6 @@ public class GameController {
         tc.handIndex = handIndex;
         addToTurnBuffer(getCurrentPlayer(), tc);
 
-        return selected;
     }
 
     /** End the current player’s turn */
@@ -108,7 +114,8 @@ public class GameController {
         // Return remaining buffer cards to hand
         if (!turnBuffer.isEmpty()) {
             for (TurnCard t : new ArrayList<>(turnBuffer)) {
-                getCurrentPlayer().addSubjectToHand(t.card);
+                if(players.contains(t.sourcePlayer))
+                    players.get(players.indexOf(t.sourcePlayer)).addSubjectToHand(t.card);
                 turnBuffer.remove(t);
             }
         }
@@ -133,7 +140,8 @@ public class GameController {
         }
 
         // Check if a trio can be validated
-        List<Subject> available = new ArrayList<>(player.getSubjects());
+        // List<Subject> available = new ArrayList<>(player.getSubjects());
+        List<Subject> available = new ArrayList<>();
         for (TurnCard t : turnBuffer) available.add(t.card);
 
         for (Competence c : game.getAllCompetences()) {
@@ -142,6 +150,7 @@ public class GameController {
                 return;
             }
         }
+
     }
 
     /** Validates a trio for a player */
@@ -194,7 +203,10 @@ public class GameController {
                 List<Competence> validated = getValidatedCompetencesForPlayer(player);
                 Set<Competence> validatedSet = new HashSet<>(validated);
                 for (Competence c : validated) {
-                    if (c.getLinkedCompetences().stream().anyMatch(validatedSet::contains)) return true;
+                    if (c.getLinkedCompetences().stream().anyMatch(validatedSet::contains)) {
+                        winner = player.getTeam();
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -203,15 +215,19 @@ public class GameController {
             List<Competence> teamValidated = getValidatedCompetencesForTeam(team);
             Set<Competence> validatedSet = new HashSet<>(teamValidated);
             for (Competence c : teamValidated) {
-                if (c.getLinkedCompetences().stream().anyMatch(validatedSet::contains)) return true;
+                if (c.getLinkedCompetences().stream().anyMatch(validatedSet::contains)) {
+                    winner = player.getTeam();
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
+    /** Retrieve validated competences for a player */
     public List<Competence> getValidatedCompetencesForPlayer(Student player) {
-        return getCompetences(player, game);
+        return game.getValidatedCompetences(player);
     }
 
     public static List<Competence> getCompetences(Student player, Game game) {
@@ -246,6 +262,18 @@ public class GameController {
         return list;
     }
 
+    /** Returns rather a turn is over or not */
+    public boolean isTurnOver() {
+        return turnMustEnd;
+    }
+
+
     /** Returns Game attribute */
     public Game getGame() { return game;}
+
+    /** Returns game winner */
+    public Team getWinner() { return winner; }
+
 }
+
+

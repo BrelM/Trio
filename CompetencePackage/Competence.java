@@ -13,8 +13,9 @@ public class Competence {
         this.name = name;
     }
 
-    public void addLinkedSubject(Subject subject) {
+    public void addSubject(Subject subject) {
         if (this.subjects.size() < 3) {
+            subject.setCompetence(this);
             this.subjects.add(subject);
         }
     }

@@ -52,6 +52,12 @@ public class Student {
 
     public void addValidatedSubject(Subject subject) {
         this.validatedSubjects.add(subject);
+        if(!competences.contains(subject.getCompetence()))
+            addValidatedCompetence(subject.getCompetence());
+    }
+
+    public void addValidatedCompetence(Competence comp) {
+        this.competences.add(comp);
     }
     
     public boolean hasWon(){
@@ -65,7 +71,7 @@ public class Student {
         for (List<Subject> group : uesGroupedByCoeff.values()) {
             if (group.size() >= 3) {
                 // Si on trouve un groupe de 3 UEs ou plus avec le même coefficient, la condition de victoire est remplie.
-                System.out.println("Condition de victoire remplie pour " + this.pseudo + " avec le coefficient " + group.get(0).getCredit());
+                System.out.println("Condition de victoire remplie pour " + this.pseudo + " avec le coefficient " + group.getFirst().getCredit());
                 return true;
             }
         }

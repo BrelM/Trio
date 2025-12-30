@@ -26,8 +26,8 @@ public class Subject {
     public boolean isState() { return state; }
     public void setState(boolean state) { this.state = state; }
 
-    public void addCompetence(Competence c) { competence = c; }
-    public Competence getCompetences() { return competence; }
+    public void setCompetence(Competence c) { competence = c; }
+    public Competence getCompetence() { return competence; }
 
 
     @Override

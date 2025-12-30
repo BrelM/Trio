@@ -26,9 +26,6 @@ public class GameBootstrapper {
             // Create the main game view
             SwingGameView view = new SwingGameView(controller);
 
-            // Link view and controller
-            view.setController(controller);
-
             // Create a JFrame to hold the game view
             JFrame gameFrame = new JFrame("Trio Game");
             gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,9 +37,6 @@ public class GameBootstrapper {
 
             // Show the frame
             gameFrame.setVisible(true);
-
-            // Shuffle and deal cards to players
-            model.shuffleAndDeal(players);
 
         });
 

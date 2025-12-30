@@ -130,19 +130,17 @@ public class Game {
 
     private void createTrio(String name, Subject s1, Subject s2, Subject s3) {
         Competence trio = new Competence(name);
-        trio.addLinkedSubject(s1);
-        trio.addLinkedSubject(s2);
-        trio.addLinkedSubject(s3);
+        trio.addSubject(s1);
+        trio.addSubject(s2);
+        trio.addSubject(s3);
         this.allCompetences.add(trio);
     }
     
 
-    // 
-
     // Mélanger et distribuer les cartes
 public void shuffleAndDeal(List<Student> players) {
         System.out.println("Mélange du paquet et distribution des cartes...");
-            
+
         // 1. Mélanger le paquet de cartes
         Collections.shuffle(this.allSubjects);
 
@@ -209,4 +207,7 @@ public void shuffleAndDeal(List<Student> players) {
     public String getMode() { return mode; }
     public String getDifficulty() { return difficulty; }
 
+    public List<Competence> getValidatedCompetences(Student player) {
+        return player.getCompetences();
+    }
 }

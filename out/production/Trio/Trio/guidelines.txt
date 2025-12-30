@@ -1,6 +1,5 @@
-// Guidelines for the gameLoop method in MainGameUI:
 
-// Present the main screen with three main sections in a horizontal layout
+// Present the main game screen with three main sections in a horizontal layout
 // 1. First section in the leftmost part of the screen contains buttons corresponding to teams/players
 //    Clicking on one of them reveals the validated competences
 // 2. Second section in the middle changes according to the instant. It could display the turn menu,
@@ -11,5 +10,3 @@
 //    the informations the current player is allowed to see (the card he drew during the turn,
 //    the announcements). It is cleared then updated everytime a player takes a turn.
 // Everytime a card needs to be represented, a simple button might be enough. Use the createButton method.
-
-// This method uses GameLoop class' play and playTurn methods.
