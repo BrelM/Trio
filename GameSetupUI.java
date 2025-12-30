@@ -251,44 +251,37 @@ public class GameSetupUI extends JFrame {
 
         if (gameMode.equals("ÉQUIPE")) {
             for (String name : teamNames) {
-                teamsMap.put(name, new Team(name, "Couleur pour " + name)); // Couleur à définir
+                teamsMap.put(name, new Team(name, "Couleur pour " + name));
             }
         }
 
         for (int i = 0; i < playerCount; i++) {
             String pseudo = pseudoFields.get(i).getText();
             String specialty = (String) specialtyCombos.get(i).getSelectedItem();
+
             if (pseudo.trim().isEmpty()) {
                 showError("Le pseudo du joueur " + (i + 1) + " ne peut pas être vide.");
                 return;
             }
 
-            Team playerTeam;
+            Team team;
             if (gameMode.equals("ÉQUIPE")) {
-                playerTeam = teamsMap.get(teamNames.get(i / 2));
+                team = teamsMap.get(teamNames.get(i / 2));
             } else {
-                playerTeam = new Team("Solo " + (i + 1), "Couleur " + (i + 1));
+                team = new Team("Solo " + (i + 1), "Couleur " + (i + 1));
             }
 
-            players.add(new Student(i + 1, pseudo, specialty, playerTeam));
+            players.add(new Student(i + 1, pseudo, specialty, team));
         }
 
-        String finalGameMode = gameMode.equals("ÉQUIPE") ? "TEAM" : "SOLO";
-        Game game = new Game(finalGameMode, this.difficulty.toUpperCase());
+        String finalMode = gameMode.equals("ÉQUIPE") ? "TEAM" : "SOLO";
+        String finalDifficulty = difficulty.toUpperCase();
 
-        try {
-            game.shuffleAndDeal(players);
-        } catch (Exception e) {
-            showError("Erreur lors de la distribution des cartes : " + e.getMessage());
-            return;
-        }
+        // Launch MVC game
+        GameBootstrapper.launchGame(finalMode, finalDifficulty, players);
 
-        SwingUtilities.invokeLater(() -> {
-            MainGameUI mainGameUI = new MainGameUI(game, players);
-            mainGameUI.setVisible(true);
-        });
-
-        this.dispose();
+        // Close setup window
+        dispose();
     }
 
 

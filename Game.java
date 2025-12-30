@@ -142,7 +142,7 @@ public class Game {
     // Mélanger et distribuer les cartes
 public void shuffleAndDeal(List<Student> players) {
         System.out.println("Mélange du paquet et distribution des cartes...");
-
+            
         // 1. Mélanger le paquet de cartes
         Collections.shuffle(this.allSubjects);
 
@@ -191,6 +191,9 @@ public void shuffleAndDeal(List<Student> players) {
 
         System.out.println("Distribution terminée.");
     }
+
+
+    /** Getters */
     public List<Subject> getCenterPile() {
         return centerPile;
     }
@@ -198,10 +201,12 @@ public void shuffleAndDeal(List<Student> players) {
     public List<Subject> getAllSubjects() {
         return allSubjects;
     }
-
+    
     public List<Competence> getAllCompetences() {
         return allCompetences;
     }
+
     public String getMode() { return mode; }
     public String getDifficulty() { return difficulty; }
+
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -154,22 +155,78 @@ public class MainGameUI extends JFrame {
 
 
     private void gameLoop() {
+        // Initialize the game loop
+        GameLoop gameLoop = new GameLoop(game, players, new Scanner(System.in));
 
-        // Present the main screen with three main sections in a horizontal layout
-        //1. First section in the leftmost part of the screen contains buttons corresponding to teams/players
-        //      Clicking on one of them reveals the validated competences
-        // 2. Second section in the middle changes according to the instant. It could display the turn menu,
-        //      it could display the options relatives to a selected option of the turn menu.
-        //      In case, the player wanted to draw a card from the center pile, it should display the available
-        //      cards as buttons.
-        // 3. Third section in the rightmost part of the screen represent the log of the turn. It contains only
-        //      the informations the current player is allowed to see (the card he drew during the turn,
-        //      the announcements). It is cleared then updated everytime a player takes a turn.
-        // Everytime a card needs to be represented, a simple button might be enough. Use the createButton method.
+        // Main game loop
+        while (!gameLoop.isGameOver()) {
+            // Display the current player's turn
+            Student currentPlayer = players.get(gameLoop.getCurrentPlayerIndex());
+            updateTurnDisplay(currentPlayer);
 
-        // This method uses GameLoop class' play and playTurn methods.
+            // Display the turn menu
+            displayTurnMenu(currentPlayer, gameLoop);
+
+
+            // Wait for the player to take an action
+            waitForPlayerAction(gameLoop);
+
+            // Check if the game is over
+            if (gameLoop.isGameOver()) {
+                displayGameEnd();
+                break;
+            }
+
+            // Move to the next turn
+            gameLoop.nextTurn();
+        }
     }
 
+    private void updateTurnDisplay(Student currentPlayer) {
+        // Update the GUI to show the current player's turn
+        JLabel turnLabel = new JLabel("Tour de: " + currentPlayer.getPseudo());
+        turnLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        gamePanel.add(turnLabel, BorderLayout.NORTH);
+    }
+
+    private void displayTurnMenu(Student currentPlayer, GameLoop gameLoop) {
+        // Create a panel for the turn menu
+        JPanel turnMenuPanel = new JPanel(new GridLayout(0, 1));
+
+        JButton viewHandButton = new JButton("Voir ma main");
+        viewHandButton.addActionListener(e -> displayHand(currentPlayer));
+        turnMenuPanel.add(viewHandButton);
+
+        JButton drawCardButton = new JButton("Tirer une carte de la pioche centrale");
+        drawCardButton.addActionListener(e -> drawFromCenterPile(currentPlayer, gameLoop));
+        turnMenuPanel.add(drawCardButton);
+
+        JButton validateTriosButton = new JButton("Voir mes trios validés");
+        validateTriosButton.addActionListener(e -> displayValidatedTrios(currentPlayer));
+        turnMenuPanel.add(validateTriosButton);
+
+        JButton endTurnButton = new JButton("Terminer mon tour");
+        endTurnButton.addActionListener(e -> gameLoop.endTurn());
+        turnMenuPanel.add(endTurnButton);
+
+        gamePanel.add(turnMenuPanel, BorderLayout.CENTER);
+    }
+
+    private void waitForPlayerAction(GameLoop gameLoop) {
+        // Wait for the player to take an action
+        while (!gameLoop.isTurnEnded()) {
+            try {
+                Thread.sleep(100); // Polling interval
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void displayGameEnd() {
+        // Display the game end screen
+        JOptionPane.showMessageDialog(this, "La partie est terminée!", "Fin de la partie", JOptionPane.INFORMATION_MESSAGE);
+    }
 
     private GridBagConstraints createGbc() {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -197,4 +254,61 @@ public class MainGameUI extends JFrame {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
 
+    private void displayHand(Student player) {
+        // Display the player's hand in a dialog
+        JPanel handPanel = new JPanel(new GridLayout(0, 1));
+        for (Subject subject : player.getSubjects()) {
+            JLabel cardLabel = new JLabel(subject.getId() + " (Coefficient: " + subject.getCredit() + ")");
+            handPanel.add(cardLabel);
+        }
+        JOptionPane.showMessageDialog(this, handPanel, "Votre Main", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void drawFromCenterPile(Student player, GameLoop gameLoop) {
+        // Display the center pile and allow the player to draw a card
+        List<Subject> centerPile = game.getCenterPile();
+        if (centerPile.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La pioche centrale est vide !", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JPanel centerPanel = new JPanel(new GridLayout(0, 1));
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton[] cardButtons = new JRadioButton[centerPile.size()];
+
+        for (int i = 0; i < centerPile.size(); i++) {
+            Subject subject = centerPile.get(i);
+            cardButtons[i] = new JRadioButton("Carte n°" + (i + 1));
+            buttonGroup.add(cardButtons[i]);
+            centerPanel.add(cardButtons[i]);
+        }
+
+        int result = JOptionPane.showConfirmDialog(this, centerPanel, "Choisissez une carte à tirer", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            for (int i = 0; i < cardButtons.length; i++) {
+                if (cardButtons[i].isSelected()) {
+                    Subject drawnCard = centerPile.remove(i);
+                    player.addSubjectToHand(drawnCard);
+                    JOptionPane.showMessageDialog(this, "Vous avez tiré: " + drawnCard.getId() + " (Coefficient: " + drawnCard.getCredit() + ")", "Carte Tirée", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void displayValidatedTrios(Student player) {
+        // Display the player's validated trios in a dialog
+        JPanel triosPanel = new JPanel(new GridLayout(0, 1));
+        List<Subject> validatedSubjects = player.getValidatedSubjects();
+        if (validatedSubjects.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vous n'avez pas encore validé de trio.", "Trios Validés", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        for (Subject subject : validatedSubjects) {
+            JLabel trioLabel = new JLabel(subject.getId() + " (Coefficient: " + subject.getCredit() + ")");
+            triosPanel.add(trioLabel);
+        }
+        JOptionPane.showMessageDialog(this, triosPanel, "Trios Validés", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

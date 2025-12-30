@@ -682,7 +682,7 @@ public class GameLoop {
     /**
      * Vérifie si la partie est terminée
      */
-    private boolean isGameOver() {
+    public boolean isGameOver() {
         if (game.getMode().equals("SOLO")) {
             for (Student player : players) {
                 if (isWinningConditionMet(player)) {
@@ -752,5 +752,22 @@ public class GameLoop {
         }
 
         System.out.println("=".repeat(50));
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public boolean isTurnEnded() {
+        return turnMustEnd;
+    }
+
+    public void nextTurn() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        turnMustEnd = false;
+    }
+
+    public void endTurn() {
+        turnMustEnd = true;
     }
 }
