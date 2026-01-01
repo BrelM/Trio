@@ -7,13 +7,13 @@ import Trio.controller.GameController;
 
 
 import Trio.*;
-import Trio.controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.Callable;
 
 public class SwingGameView extends JPanel {
 
@@ -28,6 +28,7 @@ public class SwingGameView extends JPanel {
     private JPanel rightPanel;   // Turn log
 
     private JTextArea turnLog;
+    private Runnable closer;
 
     /** Create a JButton for an or action */
     public JButton createButton(String label, ActionListener action) {
@@ -121,6 +122,12 @@ public class SwingGameView extends JPanel {
         leftPanel.repaint();
         rightPanel.repaint();
 
+        if(controller.isBadDraw())
+            JOptionPane.showMessageDialog(
+                    this,
+                    "You have drawn subjects from different competences."
+            );
+
         JOptionPane.showMessageDialog(
                 this,
                 controller.getCurrentPlayer().getPseudo() + "'s turn will now begin."
@@ -150,9 +157,12 @@ public class SwingGameView extends JPanel {
                     controller.endTurn();
                     showPreTurnMenu();
                 } else if (controller.isGameOver()) {
-                    JOptionPane.showMessageDialog(this, "Team " + controller.getWinner().getPseudo());
+                    JOptionPane.showMessageDialog(this, "Team " + controller.getWinner().getPseudo() + " has won!");
 
                     /** TODO : Follow up action at the end of the game (restart or quit) */
+                    int choice = JOptionPane.showConfirmDialog(this, "Restart the game?");
+                    if(choice == 0) reinit();
+                    else this.closer.run();
 
                 } else {
                     showTurnMenu();
@@ -250,8 +260,9 @@ public class SwingGameView extends JPanel {
     }
 
     /** Constructor update to set preferred sizes for panels */
-    public SwingGameView(GameController controller) {
+    public SwingGameView(GameController controller, Runnable windowsCloser) {
         this.controller = controller;
+        this.closer = windowsCloser;
 
         setLayout(new BorderLayout());
 
@@ -284,5 +295,18 @@ public class SwingGameView extends JPanel {
 
         showPreTurnMenu();
         //populatePlayers();
+    }
+
+    /** Reinitialize the game */
+    private void reinit() {
+        controller.reinit();
+
+        titlePanel.removeAll();
+        upperPanel.removeAll();
+        lowerPanel.removeAll();
+        leftPanel.removeAll();
+        turnLog.setText("");
+
+        showPreTurnMenu();
     }
 }

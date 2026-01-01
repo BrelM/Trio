@@ -32,6 +32,7 @@ public class GameController {
     private Integer bufferCredit = null;
     private boolean turnMustEnd = false;
     private Team winner = null;
+    private boolean badDraw = false;
 
     public GameController(Game game, List<Student> players) {
         this.game = game;
@@ -45,6 +46,29 @@ public class GameController {
         // Shuffle and distribute at game start
         game.shuffleAndDeal(players);
     }
+
+    /** Reset the configuration e.g to start a new game */
+    public void reinit() {
+
+        // Emptying cards holders
+        for(Student player : players) player.emptyHand();
+        game.emptyCenterPile();
+
+        // Shuffle and distribute again
+        game.shuffleAndDeal(players);
+
+        // Resetting game variables
+        currentPlayerIndex = 0;
+        turnAnnouncements = new ArrayList<>();
+        teamScores = new HashMap<>();
+        turnBuffer = new ArrayList<>();
+        bufferCredit = null;
+        turnMustEnd = false;
+        winner = null;
+        badDraw = false;
+
+    }
+
 
     /** Returns the current player */
     public Student getCurrentPlayer() {
@@ -127,6 +151,7 @@ public class GameController {
 
     /** Adds a card to the turn buffer and handles credit logic / trio validation */
     private void addToTurnBuffer(Student player, TurnCard tc) {
+        badDraw = false;
         turnBuffer.add(tc);
 
         if (bufferCredit == null) {
@@ -136,6 +161,7 @@ public class GameController {
             returnBufferToOrigins();
             bufferCredit = null;
             turnMustEnd = true;
+            badDraw = true;
             return;
         }
 
@@ -274,6 +300,8 @@ public class GameController {
     /** Returns game winner */
     public Team getWinner() { return winner; }
 
+    /** Returns rather it is the end of the first turn */
+    public boolean isBadDraw() { return badDraw; }
 }
 
 

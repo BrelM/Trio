@@ -50,6 +50,12 @@ public class Student {
         subjects.add(i, subject);
     }
 
+
+    public void emptyHand() {
+        // Empty the hand of the student
+        subjects = new ArrayList<>();
+    }
+
     public void addValidatedSubject(Subject subject) {
         this.validatedSubjects.add(subject);
         if(!competences.contains(subject.getCompetence()))

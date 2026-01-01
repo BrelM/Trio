@@ -138,7 +138,7 @@ public class Game {
     
 
     // Mélanger et distribuer les cartes
-public void shuffleAndDeal(List<Student> players) {
+    public void shuffleAndDeal(List<Student> players) {
         System.out.println("Mélange du paquet et distribution des cartes...");
 
         // 1. Mélanger le paquet de cartes
@@ -188,6 +188,11 @@ public void shuffleAndDeal(List<Student> players) {
         Collections.shuffle(this.centerPile);
 
         System.out.println("Distribution terminée.");
+    }
+
+    /** Empty the center pile */
+    public void emptyCenterPile() {
+        this.centerPile = new ArrayList<>();
     }
 
 

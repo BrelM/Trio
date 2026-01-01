@@ -23,8 +23,6 @@ public class GameBootstrapper {
         GameController controller = new GameController(model, players);
 
         SwingUtilities.invokeLater(() -> {
-            // Create the main game view
-            SwingGameView view = new SwingGameView(controller);
 
             // Create a JFrame to hold the game view
             JFrame gameFrame = new JFrame("Trio Game");
@@ -32,6 +30,9 @@ public class GameBootstrapper {
             gameFrame.setSize(1000, 600); // adjust as needed
             gameFrame.setLocationRelativeTo(null);
             gameFrame.setLayout(new BorderLayout());
+
+            // Create the main game view
+            SwingGameView view = new SwingGameView(controller, gameFrame::dispose);
 
             gameFrame.add(view, BorderLayout.CENTER);
 
