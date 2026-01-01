@@ -1,7 +1,6 @@
-package Trio;
+package Trio.controller;
 
 import Trio.model.Game;
-import Trio.controller.GameController;
 import Trio.model.classes.Student;
 import Trio.view.swing.SwingGameView;
 

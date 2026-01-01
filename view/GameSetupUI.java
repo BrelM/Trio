@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 // Importation des classes de votre logique de jeu
-import Trio.GameBootstrapper;
+import Trio.controller.GameBootstrapper;
 import Trio.model.classes.Student;
 import Trio.model.classes.Team;
 
