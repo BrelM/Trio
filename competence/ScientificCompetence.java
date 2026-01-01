@@ -1,4 +1,4 @@
-package Trio.CompetencePackage;
+package Trio.competence;
 
 public class ScientificCompetence extends Competence {
     

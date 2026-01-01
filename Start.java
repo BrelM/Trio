@@ -1,5 +1,7 @@
 package Trio;
 
+import Trio.view.GameSetupUI;
+
 import javax.swing.SwingUtilities;
 
 /**

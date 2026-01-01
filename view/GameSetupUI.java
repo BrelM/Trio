@@ -1,4 +1,4 @@
-package Trio;
+package Trio.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 // Importation des classes de votre logique de jeu
-import Trio.Game;
-import Trio.Student;
-import Trio.Team;
+import Trio.GameBootstrapper;
+import Trio.model.classes.Student;
+import Trio.model.classes.Team;
 
 public class GameSetupUI extends JFrame {
 

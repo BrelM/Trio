@@ -1,8 +1,6 @@
-package Trio;
+package Trio.model.classes;
 
-import Trio.CompetencePackage.Competence;
-import java.util.ArrayList;
-import java.util.List;
+import Trio.competence.Competence;
 
 public class Subject {
     private String id;

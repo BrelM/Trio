@@ -1,8 +1,7 @@
 package Trio.model;
 
-import Trio.Game;
-import Trio.Student;
-import Trio.Subject;
+import Trio.model.classes.Student;
+import Trio.model.classes.Subject;
 
 import java.util.List;
 

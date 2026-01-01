@@ -1,19 +1,16 @@
 package Trio.view.swing;
 
-import Trio.CompetencePackage.Competence;
-import Trio.Student;
-import Trio.Subject;
+import Trio.competence.Competence;
+import Trio.model.classes.Student;
+import Trio.model.classes.Subject;
 import Trio.controller.GameController;
 
-
-import Trio.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.Callable;
 
 public class SwingGameView extends JPanel {
 

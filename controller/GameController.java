@@ -1,12 +1,12 @@
 package Trio.controller;
 
-import Trio.CompetencePackage.Competence;
+import Trio.competence.Competence;
 import java.util.*;
 
-import Trio.Game;
-import Trio.Student;
-import Trio.Subject;
-import Trio.Team;
+import Trio.model.Game;
+import Trio.model.classes.Student;
+import Trio.model.classes.Subject;
+import Trio.model.classes.Team;
 
 public class GameController {
 

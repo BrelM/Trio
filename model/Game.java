@@ -1,6 +1,12 @@
-package Trio;
+package Trio.model;
 
-import Trio.CompetencePackage.Competence;
+import Trio.competence.Competence;
+import Trio.competence.ManagementCompetence;
+import Trio.competence.ScientificCompetence;
+import Trio.competence.SocietalCompetence;
+import Trio.model.classes.Student;
+import Trio.model.classes.Subject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -129,7 +135,14 @@ public class Game {
     }
 
     private void createTrio(String name, Subject s1, Subject s2, Subject s3) {
-        Competence trio = new Competence(name);
+        Competence trio;
+        if(name.contains("Scientific"))
+            trio = new ScientificCompetence(name);
+        else if (name.contains("Societal")) {
+            trio = new SocietalCompetence(name);
+        } else {//if (name.contains("Management")) {
+            trio = new ManagementCompetence(name);
+        }
         trio.addSubject(s1);
         trio.addSubject(s2);
         trio.addSubject(s3);
