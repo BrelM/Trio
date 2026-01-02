@@ -1,4 +1,4 @@
-package Trio.competence;
+package Trio.src.competence;
 
 public class SocietalCompetence extends Competence {
     

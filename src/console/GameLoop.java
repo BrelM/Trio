@@ -1,10 +1,10 @@
-package Trio.console;
+package Trio.src.console;
 
-import Trio.model.Game;
-import Trio.model.classes.Student;
-import Trio.model.classes.Subject;
-import Trio.model.classes.Team;
-import Trio.competence.Competence;
+import Trio.src.model.Game;
+import Trio.src.model.classes.Student;
+import Trio.src.model.classes.Subject;
+import Trio.src.model.classes.Team;
+import Trio.src.competence.Competence;
 import java.util.*;
 
 public class GameLoop {

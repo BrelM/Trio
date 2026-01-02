@@ -1,7 +1,7 @@
-package Trio.model;
+package Trio.src.model;
 
-import Trio.model.classes.Student;
-import Trio.model.classes.Subject;
+import Trio.src.model.classes.Student;
+import Trio.src.model.classes.Subject;
 
 import java.util.List;
 

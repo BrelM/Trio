@@ -1,6 +1,6 @@
-package Trio;
+package Trio.src;
 
-import Trio.view.GameSetupUI;
+import Trio.src.view.GameSetupUI;
 
 import javax.swing.SwingUtilities;
 

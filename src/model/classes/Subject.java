@@ -1,6 +1,6 @@
-package Trio.model.classes;
+package Trio.src.model.classes;
 
-import Trio.competence.Competence;
+import Trio.src.competence.Competence;
 
 public class Subject {
     private String id;

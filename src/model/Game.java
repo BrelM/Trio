@@ -1,11 +1,11 @@
-package Trio.model;
+package Trio.src.model;
 
-import Trio.competence.Competence;
-import Trio.competence.ManagementCompetence;
-import Trio.competence.ScientificCompetence;
-import Trio.competence.SocietalCompetence;
-import Trio.model.classes.Student;
-import Trio.model.classes.Subject;
+import Trio.src.competence.Competence;
+import Trio.src.competence.ManagementCompetence;
+import Trio.src.competence.ScientificCompetence;
+import Trio.src.competence.SocietalCompetence;
+import Trio.src.model.classes.Student;
+import Trio.src.model.classes.Subject;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,6 @@
-package Trio.competence;
+package Trio.src.competence;
 
-import Trio.model.classes.Subject;
+import Trio.src.model.classes.Subject;
 import java.util.ArrayList;
 import java.util.List;
 

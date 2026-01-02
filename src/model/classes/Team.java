@@ -1,4 +1,4 @@
-package Trio.model.classes;
+package Trio.src.model.classes;
 
 public class Team {
     public enum Color { RED, BLUE, GREEN, YELLOW }

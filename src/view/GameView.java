@@ -1,7 +1,7 @@
-package Trio.view;
+package Trio.src.view;
 
-import Trio.controller.GameController;
-import Trio.model.GameModel;
+import Trio.src.controller.GameController;
+import Trio.src.model.GameModel;
 
 public interface GameView {
 

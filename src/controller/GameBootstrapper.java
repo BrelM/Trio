@@ -1,8 +1,8 @@
-package Trio.controller;
+package Trio.src.controller;
 
-import Trio.model.Game;
-import Trio.model.classes.Student;
-import Trio.view.swing.SwingGameView;
+import Trio.src.model.Game;
+import Trio.src.model.classes.Student;
+import Trio.src.view.swing.SwingGameView;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,9 +1,9 @@
-package Trio.view.swing;
+package Trio.src.view.swing;
 
-import Trio.competence.Competence;
-import Trio.model.classes.Student;
-import Trio.model.classes.Subject;
-import Trio.controller.GameController;
+import Trio.src.competence.Competence;
+import Trio.src.model.classes.Student;
+import Trio.src.model.classes.Subject;
+import Trio.src.controller.GameController;
 
 
 import javax.swing.*;

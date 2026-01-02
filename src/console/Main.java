@@ -1,8 +1,8 @@
-package Trio.console;
+package Trio.src.console;
 
-import Trio.model.Game;
-import Trio.model.classes.Student;
-import Trio.model.classes.Team;
+import Trio.src.model.Game;
+import Trio.src.model.classes.Student;
+import Trio.src.model.classes.Team;
 
 import java.util.ArrayList;
 import java.util.List;
