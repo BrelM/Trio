@@ -35,9 +35,15 @@ public class SwingGameView extends JPanel {
     }
 
     /** Create a JButton for a card */
-    public JButton createCardButton(String label) {
-        JButton button = new JButton(label);
-        button.setPreferredSize(new Dimension(100, 120));
+    public JButton createCardButton(Subject card) {
+        StringBuilder label = new StringBuilder();
+        label.append(card.getId()).append(" (").append(card.getCredit()).append(")\n (");
+        for(Competence c : card.getCompetence().getLinkedCompetences())
+            label.append(c.getSubjects().getFirst().getCredit()).append(", ");
+        label = new StringBuilder(label.substring(0, label.length()-2));
+        label.append(")");
+        JButton button = new JButton(label.toString());
+        button.setPreferredSize(new Dimension(150, 120));
 
         return button;
     }
@@ -48,7 +54,7 @@ public class SwingGameView extends JPanel {
         upperPanel.removeAll();
 
         for (Subject s : controller.getCurrentPlayer().getSubjects()) {
-            JButton btn = createCardButton(s.getId() + " (" + s.getCredit() + ")");
+            JButton btn = createCardButton(s);
             upperPanel.add(btn);
         }
 
